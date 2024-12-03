@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Comidas</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <h1>🍽Cardimac</h1>
+      <p>Explora recetas de todo el mundo y encuentra tu próxima comida favorita.</p>
+    </header>
+
+    <section class="filters">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        placeholder="🔍 Buscar por nombre..." 
+        @input="filterByName"
+      />
+      <select v-model="selectedCategory" @change="filterByCategory">
+        <option value="">Todas las categorías</option>
+        <option v-for="category in categories" :key="category" :value="category">
+          {{ category }}
+        </option>
+      </select>
+    </section>
+
+    <section class="progress">
+      <p>Mostrando <strong>{{ filteredMeals.length }}</strong> de <strong>{{ meals.length }}</strong> comidas</p>
+    </section>
+    <section class="progress-bar-container">
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ width: progressPercentage + '%' }"></div>
+        </div>
+        <p class="progress-text">Has seleccionado {{ selectedMeals.length }} de {{ meals.length }} platillos</p>
+      </section>
+      
+      <section class="catalog">
+        <div 
+          class="card" 
+          v-for="meal in filteredMeals" 
+          :key="meal.idMeal"
+        >
+          <img 
+            :src="meal.strMealThumb" 
+            :alt="meal.strMeal" 
+            @error="handleImageError" 
+            class="meal-image"
+          />
+          <div class="card-content">
+            <h3>{{ meal.strMeal }}</h3>
+            <p>Categoría: {{ meal.strCategory || 'No especificada' }}</p>
+            <button @click="toggleMealSelection(meal)">
+              {{ isMealSelected(meal) ? 'Quitar' : 'Agregar' }}
+            </button>
+          </div>
+        </div>
+      </section>
+      
+
+    <section class="catalog">
+      <div 
+        class="card" 
+        v-for="meal in filteredMeals" 
+        :key="meal.idMeal"
+      >
+        <img 
+          :src="meal.strMealThumb" 
+          :alt="meal.strMeal" 
+          @error="handleImageError" 
+          class="meal-image"
+        />
+        <div class="card-content">
+          <h3>{{ meal.strMeal }}</h3>
+          <p>Categoría: {{ meal.strCategory || 'No especificada' }}</p>
+          <button @click="alert('Receta seleccionada: ' + meal.strMeal)">
+            Ver Receta
+          </button>
+        </div>
+      </div>
+      <p v-if="filteredMeals.length === 0" class="no-results">
+        😢 No se encontraron resultados. Intenta otra búsqueda.
+      </p>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
